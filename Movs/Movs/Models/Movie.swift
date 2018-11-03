@@ -9,7 +9,7 @@
 import Foundation
 import Moya
 
-struct Movie {
+struct PopularMovie {
     let id: Int
     let genresId: [Int]
     let title: String
@@ -21,7 +21,7 @@ struct Movie {
     var isFavorite: Bool
 }
 
-extension Movie: Decodable {
+extension PopularMovie: Decodable {
     enum MovieCodingKeys: String, CodingKey {
         case id
         case genresId = "genre_ids"

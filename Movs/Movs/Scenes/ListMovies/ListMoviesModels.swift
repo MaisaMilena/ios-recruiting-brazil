@@ -6,36 +6,45 @@
 //  Copyright (c) 2018 Maisa Milena. All rights reserved.
 //
 
-
 import UIKit
 
 enum ListMovies{
-  // MARK: Use cases
-  
-    enum Fetch {
-        struct Request {
+
+    struct Request {
+        let page: Int
+    }
     
+    enum Response {
+        struct Success {
+            let movies: [PopularMovie]
         }
         
-        struct Response {
-            let movies: [Movie]?
-            let error: String?
-        }
-        
-        enum ViewModel {
-            struct Success {
-                let movies: [Movie]
-            }
-            
-            struct Error {
-                var image: UIImage?
-                var message: String
-            }
+        struct Error {
+            var image: UIImage?
+            let description: String
+            var errorType: FetchError
         }
     }
-
-    enum ErrorType {
-        case connectionError
+    
+    enum ViewModel {
+        struct Success {
+            let movies: [PopularMoviesFormatted]
+        }
+        
+        struct Error {
+            var image: UIImage?
+            var message: String
+            var errorType: FetchError
+        }
+        
+        struct PopularMoviesFormatted {
+            let id: Int
+            let title: String
+            let overview: String
+            var posterPath: URL
+            var favoriteIcon: UIImage
+            var isFavorite: Bool
+        }
     }
     
 }

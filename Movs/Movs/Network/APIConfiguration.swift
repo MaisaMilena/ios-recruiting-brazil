@@ -9,7 +9,8 @@
 import Moya
 
 enum MovieDB_API {
-    case listPopularMovies(page: Int)
+    case listPopularMovies(listRequest: ListMovies.Request)
+    case getMovieDetails(movieRequest: DetailMovieModel.Request)
 }
 
 struct APISetting {
@@ -17,6 +18,8 @@ struct APISetting {
 }
 
 extension MovieDB_API: TargetType {
+    
+    var languagePortuguese: String { return "pt-BR" }
     
     var baseURL: URL {
         return URL(string: "https://api.themoviedb.org/3")!
@@ -26,12 +29,14 @@ extension MovieDB_API: TargetType {
         switch self {
         case .listPopularMovies:
             return "/movie/popular"
+        case .getMovieDetails(let movieRequest):
+            return "/movie/\(movieRequest.movieId)"
         }
     }
     
     var method: Method {
         switch self {
-        case .listPopularMovies:
+        case .listPopularMovies, .getMovieDetails:
             return Method.get
         }
     }
@@ -42,12 +47,15 @@ extension MovieDB_API: TargetType {
     
     var task: Task {
         switch self {
-        case .listPopularMovies(let page):
+        case .listPopularMovies(let listRequest):
             return .requestParameters(parameters: ["api_key": APISetting.key,
-                                                   "language": "pt-BR",
-                                                   "page": page],
+                                                   "language": languagePortuguese,
+                                                   "page": listRequest.page],
                                       encoding: URLEncoding.queryString)
-        
+        case .getMovieDetails:
+            return .requestParameters(parameters: ["api_key": APISetting.key,
+                                                   "language": languagePortuguese],
+                                      encoding: URLEncoding.queryString)
         }
     }
     
